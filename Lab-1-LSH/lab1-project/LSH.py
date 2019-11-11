@@ -1,4 +1,5 @@
-from lsh.MinHashing import MinHashing
+from MinHashing import MinHashing
+
 import numpy as np
 
 

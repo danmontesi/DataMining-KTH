@@ -3,8 +3,8 @@ import findspark
 import pyspark
 import numpy as np
 
-from lsh.LSH import LSH
-from lsh.Shingling import Shingling
+from LSH import LSH
+from Shingling import Shingling
 
 
 def cleanDocument(document):
