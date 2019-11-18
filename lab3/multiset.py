@@ -1,4 +1,8 @@
 class Multiset():
+    """
+    Class for maintaining a series of repeated elements.
+    (multi: duplicate elements in the set)
+    """
 
     def __init__(self, elements):
         self.elements = elements

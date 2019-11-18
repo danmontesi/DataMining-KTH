@@ -6,11 +6,17 @@ from hasher import Hasher
 
 class FlajoletMartin(CardinalityCalculator):
     def __init__(self, elements, k, l, max_value):
+        """
+        :param elements: Elements of the multiset
+        :param k:
+        :param l:
+        :param max_value: maximum value allowed to be inside the multiset representation
+        """
         super().__init__(np.array(elements, dtype=np.int64))
         self.k = k
         self.l = l
         self.maxValue = max_value
-        self.L = np.ceil(np.log2(max_value))
+        self.L = np.ceil(np.log2(max_value)) #Maximum number of zeros allowed
 
     def lsb(self, value):
         if value == 0:

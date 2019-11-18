@@ -10,10 +10,16 @@ class MultisetGenerator:
         self.max_value = max_value
 
     def generate(self):
+        """
+        Generate #self.length samples of randomic elements,
+        having random number of duplicates i.e. generate random number n.
+        Then, insert n into the set m random number times.
+        [n,n,n, ... n] = [n]*m
+        """
         temp_length = self.length
         while temp_length > 0:
             el = np.random.randint(0, self.max_value)
-            occurrences = np.random.randint(1, int(self.length ** 0.5))
+            occurrences = np.random.randint(1, int(self.length ** 0.5)) #Why sqrt?
             self.multiset.add_element_with_replication(el, occurrences)
             temp_length -= occurrences
 
