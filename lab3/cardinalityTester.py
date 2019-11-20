@@ -10,6 +10,10 @@ class CardinalityTester():
         self.multiset = self.generate_multiset()
 
     def generate_multiset(self):
+        """
+        Generate a multiset having size self.multiset_size containing randomic elements
+        :return: list[int]
+        """
         multiset_generator = MultisetGenerator(self.multiset_size, self.max_value)
         multiset_generator.generate()
         multiset = multiset_generator.multiset
