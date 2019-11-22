@@ -1,6 +1,6 @@
 import numpy as np
 
-from multiset import Multiset
+from testers.multiset import Multiset
 
 
 class MultisetGenerator:

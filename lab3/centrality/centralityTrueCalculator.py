@@ -1,6 +1,6 @@
 import numpy as np
 
-from centralityCalculator import CentralityCalculator
+from centrality.centralityCalculator import CentralityCalculator
 
 
 class CentralityTrueCalculator(CentralityCalculator):

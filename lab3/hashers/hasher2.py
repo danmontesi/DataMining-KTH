@@ -1,8 +1,6 @@
 import hashlib
 
-import numpy as np
-
-from hasher import Hasher
+from hashers.hasher import Hasher
 
 
 class Hasher2(Hasher):

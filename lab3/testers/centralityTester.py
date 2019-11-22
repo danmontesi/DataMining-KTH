@@ -1,8 +1,8 @@
-from centralityHyperBallCalculator import CentralityHyperBallCalculator
-from centralityTrueCalculator import CentralityTrueCalculator
-from edge import Edge
-from graph import Graph
-from hasher2 import Hasher2
+from centrality.centralityHyperBallCalculator import CentralityHyperBallCalculator
+from centrality.centralityTrueCalculator import CentralityTrueCalculator
+from graph_dir.edge import Edge
+from graph_dir.graph import Graph
+from hashers.hasher2 import Hasher2
 import numpy as np
 
 

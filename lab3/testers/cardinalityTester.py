@@ -1,10 +1,9 @@
-from cardinalityTrueCalculator import CardinalityTrueCalculator
-from flajoletMartin import FlajoletMartin
-from hasher import Hasher
-from hasher2 import Hasher2
-from hyperloglog import HyperLogLog
-from multisetGenerator import MultisetGenerator
-import numpy as np
+from cardinality.cardinalityTrueCalculator import CardinalityTrueCalculator
+from cardinality.flajoletMartin import FlajoletMartin
+from hashers.hasher2 import Hasher2
+from cardinality.hyperloglog import HyperLogLog
+from testers.multisetGenerator import MultisetGenerator
+
 
 class CardinalityTester():
 

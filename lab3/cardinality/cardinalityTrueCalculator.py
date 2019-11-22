@@ -1,5 +1,5 @@
-from cardinalityCalculator import CardinalityCalculator
-from multiset import Multiset
+from cardinality.cardinalityCalculator import CardinalityCalculator
+from testers.multiset import Multiset
 
 
 class CardinalityTrueCalculator(CardinalityCalculator):

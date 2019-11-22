@@ -1,20 +1,32 @@
-from cardinalityCalculator import CardinalityCalculator
 import numpy as np
 
-from flajoletMartin import FlajoletMartin
+from cardinality.flajoletMartin import FlajoletMartin
 
 
 class HyperLogLog(FlajoletMartin):
 
     def __init__(self, max_value, num_buckets, hasher):
         self.L = np.ceil(np.log2(max_value))
+
+        # log(num_buckets)
         self.bucket_leading_bits = np.ceil(np.log2(num_buckets))
+
+        # M = Number of registers to use
         self.num_buckets = int(2 ** self.bucket_leading_bits)
         self.hasher = hasher
+
+        # Initialize m registers to 0
         self.buckets = np.zeros(self.num_buckets)
+
+        # https://en.wikipedia.org/wiki/HyperLogLog
         self.alpha = {16: 0.673, 32: 0.697, 64: 0.709}
 
     def get_bucket_id(self, value):
+        """
+        Given a number, find the register_id where to store the number
+        :param value: value I encounter in the stram
+        :return: id of the bucket
+        """
         bucket_id = 0
         k = 0
         while k < self.bucket_leading_bits:
@@ -47,6 +59,8 @@ class HyperLogLog(FlajoletMartin):
     def count(self):
         Z = np.sum(np.exp2(self.buckets * -1)) ** -1
         E = self.alpha[self.num_buckets] * Z * self.num_buckets ** 2
+
+        # Special cases check
         if E <= 5/2*self.num_buckets:
             V = self.count_buckets_with_zeros()
             if V != 0:
@@ -63,4 +77,9 @@ class HyperLogLog(FlajoletMartin):
         return self.count()
 
     def union(self, hyperLogLog2):
+        """
+        Return the pair-wise max over the 2 registers of the LogLog counters
+        :param hyperLogLog2: Second counter where to apply union to
+        :return:
+        """
         self.buckets = np.maximum(self.buckets, hyperLogLog2.buckets)

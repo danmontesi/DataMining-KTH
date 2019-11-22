@@ -1,4 +1,4 @@
-from node import Node
+from graph_dir.node import Node
 
 
 class Graph:

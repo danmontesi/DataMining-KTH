@@ -1,7 +1,7 @@
-from cardinalityCalculator import CardinalityCalculator
+from cardinality.cardinalityCalculator import CardinalityCalculator
 import numpy as np
 
-from hasher import Hasher
+from hashers.hasher import Hasher
 
 
 class FlajoletMartin(CardinalityCalculator):
