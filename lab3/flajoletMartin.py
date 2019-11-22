@@ -17,6 +17,11 @@ class FlajoletMartin(CardinalityCalculator):
         self.L = np.ceil(np.log2(max_value)) #Maximum number of zeros allowed
 
     def lsb(self, value):
+        """
+        lsb: least significant bit position
+        :param hasher:
+        :return:
+        """
         if value == 0:
             return self.L
         k = 0
@@ -41,7 +46,9 @@ class FlajoletMartin(CardinalityCalculator):
         for k in range(self.k):
             medians = np.zeros(self.l)
             for l in range(self.l):
-                w1 = np.random.randint(1, 2**(self.L-1) - 1)
+                # Create k*l hash functions with different factors
+                # h(x) = (w1 * value + w0) % mod
+                w1 = np.random.randint(1, 2**self.L - 1)
                 w0 = np.random.randint(1, 2**self.L - 1)
                 mod = 2**self.L - 1
                 hasher = Hasher(w1, w0, mod)

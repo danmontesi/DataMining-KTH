@@ -26,8 +26,8 @@ class CardinalityTester():
     def test(self):
         cardinality_true_calculator = CardinalityTrueCalculator()
         print("Real cardinality: " + str(cardinality_true_calculator.calculate(self.multiset.elements)))
-        #flajolet_martin = FlajoletMartin(50, 20, max_value)
-        #print("Approximate cardinality flajolet: " + str(flajolet_martin.calculate(self.multiset.elements)))
+        flajolet_martin = FlajoletMartin(50, 20, max_value)
+        print("Approximate cardinality flajolet: " + str(flajolet_martin.calculate(self.multiset.elements)))
         hyperloglog = HyperLogLog(self.max_value, 32, Hasher2(2**32))
         print("Approximate cardinality loglog: " + str(hyperloglog.calculate(self.multiset.elements)))
 

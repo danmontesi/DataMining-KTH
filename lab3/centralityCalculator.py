@@ -4,6 +4,11 @@ import numpy as np
 class CentralityCalculator:
 
     def __init__(self, graph):
+        """
+        Initializes parameters and assign the given graph
+        :param graph:
+        :param hyper_ball_cardinalities: matrix having num_of_nodes x num_of_nodes cells
+        """
         self.graph = graph
         self.hyper_ball_cardinalities = np.zeros((self.graph.num_of_nodes, self.graph.num_of_nodes + 1)) #a matrix that store, for each node x and for each radius r, the cardinality of the HyperBall B(x,r)
         for x in range(self.graph.num_of_nodes):
