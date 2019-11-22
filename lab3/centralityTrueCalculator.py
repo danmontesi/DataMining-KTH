@@ -21,7 +21,7 @@ class CentralityTrueCalculator(CentralityCalculator):
         dist = np.ones(self.graph.num_of_nodes, dtype=int)*(self.graph.num_of_nodes + 1)
         dist[start.id] = 0
         while len(queue) > 0:
-            current_node = queue.pop()
+            current_node = queue.pop(0)
             adjacent_nodes = self.graph.get_adjacent_nodes_transpose(current_node)
             for node in adjacent_nodes:
                 if dist[node.id] == self.graph.num_of_nodes + 1:

@@ -19,7 +19,7 @@ class MultisetGenerator:
         temp_length = self.length
         while temp_length > 0:
             el = np.random.randint(0, self.max_value)
-            occurrences = np.random.randint(1, int(self.length ** 0.5)) #Why sqrt?
+            occurrences = 1 + np.random.randint(0, 1 + int(self.length ** 0.5))
             self.multiset.add_element_with_replication(el, occurrences)
             temp_length -= occurrences
 
