@@ -2,8 +2,8 @@ from centrality.centralityHyperBallCalculator import CentralityHyperBallCalculat
 from centrality.centralityTrueCalculator import CentralityTrueCalculator
 from graph_dir.edge import Edge
 from graph_dir.graph import Graph
+from graph_reader import GraphReader
 from hashers.hasher2 import Hasher2
-import numpy as np
 
 
 
@@ -26,10 +26,8 @@ graph.add_edge(Edge(graph.get_node(1), graph.get_node(5)))
 graph.add_edge(Edge(graph.get_node(5), graph.get_node(6)))"""
 
 
-graph = Graph(num_of_nodes)
-for e in range(1000):
-    graph.add_edge(Edge(graph.get_node(np.random.randint(0, num_of_nodes)), graph.get_node(np.random.randint(0, num_of_nodes))))
-
+graph_r = GraphReader("airport_graph_dataset.txt")
+graph = graph_r.read_graph()
 centralityTrueCalculator = CentralityTrueCalculator(graph)
 centralityTrueCalculator.calculate_hyper_balls()
 

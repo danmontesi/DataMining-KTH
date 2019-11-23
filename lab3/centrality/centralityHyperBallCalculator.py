@@ -36,7 +36,7 @@ class CentralityHyperBallCalculator(CentralityCalculator):
 
     def calculate_hyper_balls(self):
         t = 2
-        while t < self.graph.num_of_nodes:
+        while t < self.graph.num_of_nodes and not self.has_reached_convergence(t):
             for node in self.graph.nodes:
                 # Append in position 1 an empty counter for every node list in the list self.hyperloglog_balls_diff
                 self.hyperloglog_balls_diff[node.id].append(HyperLogLog(self.max_value, self.num_buckets, self.hasher))
@@ -54,9 +54,8 @@ class CentralityHyperBallCalculator(CentralityCalculator):
         print("Reached convergence in " + str(t) + " iterations")
 
     def has_reached_convergence(self, t):
-        # TODO
         for i in range(len(self.hyper_ball_cardinalities)):
-            if self.hyper_ball_cardinalities[i][0] != self.hyper_ball_cardinalities[i][1]:
+            if self.hyper_ball_cardinalities[i][t-1] != self.hyper_ball_cardinalities[i][t-2]:
                 return False
 
         return True

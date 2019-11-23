@@ -3,4 +3,4 @@ class Node:
         self.id = id
 
     def get_id(self):
-        return id
+        return self.id

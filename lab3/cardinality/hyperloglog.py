@@ -1,5 +1,6 @@
 import numpy as np
 
+from cardinality.cardinalityCalculator import CardinalityCalculator
 from cardinality.flajoletMartin import FlajoletMartin
 
 
@@ -73,6 +74,11 @@ class HyperLogLog(FlajoletMartin):
             return np.ceil((-2**32)*np.log(1-E/(2**32)))
 
     def calculate(self, elements):
+        """
+        Calculate cardinality given a full set of elements
+        :param elements:
+        :return:
+        """
         self.calculate_with_buckets(elements)
         return self.count()
 

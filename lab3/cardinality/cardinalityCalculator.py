@@ -1,4 +1,4 @@
 class CardinalityCalculator:
 
-    def calculate(self):
+    def calculate(self, param):
         return
