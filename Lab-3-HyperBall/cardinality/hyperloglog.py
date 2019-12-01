@@ -39,8 +39,8 @@ class HyperLogLog(FlajoletMartin):
     def calculate_with_buckets(self, elements):
         for el in elements:
             hashed = self.hasher.hash_value(el)
-            bucket = self.get_bucket_id(hashed) # TODO ASK TO ANDRE
-            self.buckets[bucket] = max(self.buckets[bucket], 1 + self.lsb(hashed)) # TODO ASK TO ANDRE
+            bucket = self.get_bucket_id(hashed)
+            self.buckets[bucket] = max(self.buckets[bucket], 1 + self.lsb(hashed))
 
 
     def linear_counting(self, V):
@@ -71,7 +71,7 @@ class HyperLogLog(FlajoletMartin):
         elif E <= (1/30)*2**32:
             return np.ceil(E)
         else:
-            return np.ceil((-2**32)*np.log(1-E/(2**32)))  # TODO ASK TO ANDRE
+            return np.ceil((-2**32)*np.log(1-E/(2**32)))
 
     def calculate(self, elements):
         """
