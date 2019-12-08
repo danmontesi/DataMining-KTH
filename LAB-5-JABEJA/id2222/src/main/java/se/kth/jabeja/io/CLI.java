@@ -37,7 +37,7 @@ public class CLI {
   @Option(name = "-seed", usage = "Seed.")
   private int SEED = 0;
 
-  @Option(name = "-alpha", usage = "Alpah parameter")
+  @Option(name = "-alpha", usage = "Alpha parameter")
   private float ALPHA = 2;
 
   @Option(name = "-randNeighborsSampleSize", usage = "Number of random neighbors sample size.")
@@ -52,10 +52,13 @@ public class CLI {
   private NodeSelectionPolicy nodeSelectionPolicy = NodeSelectionPolicy.HYBRID;
 
   @Option(name = "-graph", usage = "Location of the input graph.")
-  private static String GRAPH = "./graphs/ws-250.graph";
+  private static String GRAPH = "./graphs/Twitter.graph";
 
   @Option(name = "-outputDir", usage = "Location of the output file(s)")
   private static String OUTPUT_DIR = "./output";
+
+  @Option(name = "-talpha", usage = "Alpha for cooling down using the approach of Katrina Geltman")
+  private float TALPHA = (float) 0.95;
 
   public Config parseArgs(String[] args) throws FileNotFoundException {
     CmdLineParser parser = new CmdLineParser(this);
@@ -110,6 +113,7 @@ public class CLI {
             .setNodeSelectionPolicy(nodeSelectionPolicy)
             .setGraphInitialColorPolicy(graphInitColorSelectionPolicy)
             .setOutputDir(OUTPUT_DIR)
-            .setAlpha(ALPHA);
+            .setAlpha(ALPHA)
+            .setTAlpha(TALPHA);
   }
 }

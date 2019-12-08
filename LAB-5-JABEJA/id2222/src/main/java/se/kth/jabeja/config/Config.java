@@ -13,6 +13,8 @@ public class Config {
   private GraphInitColorPolicy initColorPolicy;
   private NodeSelectionPolicy nodeSelectionPolicy;
   private Float alpha;
+  private Float talpha;
+
 
   public Config setAlpha(Float alpha) {
     this.alpha = alpha;
@@ -73,6 +75,13 @@ public class Config {
     this.uniformRandomSampleSize = rnd_list_size;
     return this;
   }
+
+
+  public Config setTAlpha(Float talpha){
+    this.talpha = talpha;
+    return this;
+  }
+
 
   public Integer getNumPartitions() {
     if (numPartitions == null) {
@@ -156,6 +165,13 @@ public class Config {
     if (alpha == null) {
     }
     return alpha;
+  }
+
+
+  public Float getTAlpha() {
+    if (talpha == null) {
+    }
+    return talpha;
   }
 
   public Config createJabejaConfig() {

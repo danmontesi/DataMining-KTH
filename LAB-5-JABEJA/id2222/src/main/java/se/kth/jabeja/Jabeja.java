@@ -17,8 +17,11 @@ public class Jabeja {
   private final List<Integer> nodeIds;
   private int numberOfSwaps;
   private int round;
+
   private float T;
   private boolean resultFileCreated = false;
+  private int roundRestart = 400;
+
 
   //-------------------------------------------------------------------
   public Jabeja(HashMap<Integer, Node> graph, Config config) {
@@ -37,7 +40,12 @@ public class Jabeja {
       for (int id : entireGraph.keySet()) {
         sampleAndSwap(id);
       }
-
+        //TODO TASK 2: restart; every roundRestart round add a restart. N defined by config
+        if (roundRestart>0) {
+            if (round % roundRestart == 0) {
+                this.T = config.getTemperature();
+            }
+        }
       //one cycle for all nodes have completed.
       //reduce the temperature
       saCoolDown();
@@ -49,15 +57,42 @@ public class Jabeja {
    * Simulated analealing cooling function
    */
   private void saCoolDown(){
-    // TODO for second task
+    // FIRST implementation (already present)
+/*
     if (this.T > 1)
       this.T -= config.getDelta();
     if (this.T < 1)
       this.T = 1;
+
+*/
+
+  // TODO Task 2: change tMin (very small) and Tstart (max 1)
+      float tMin = 0.001f;
+    if (this.T > tMin) {
+        this.T = T - config.getDelta() - T*config.getDelta();;
+        if (this.T < tMin) System.out.println("\n\n\nReached Tmin\n\n\n");
+    }
+    if (this.T < tMin)
+          this.T = tMin;
+
+/*
+    //Third task completion: paper on http://katrinaeg.com/simulated-annealing.html
+      // Set Tmin and put T_new = T_old*talpha. with talpha <1 and close to 1.
+      // If T<Tmin -> set T to Tmin
+
+    float tMin = 0.00001f;
+    float alphaT = config.getTAlpha();
+
+    this.T = this.T*alphaT;
+    if (this.T <= tMin)
+      this.T = tMin;
+*/
+
   }
 
+
   /**
-   * Sample and swap algorith at node p
+   * Sample and swap algorithm at node p
    * @param nodeId
    */
   private void sampleAndSwap(int nodeId) {
@@ -87,25 +122,75 @@ public class Jabeja {
 
   }
 
+  public double calculateAcceptanceProbability(double oldCost, double newCost){
+      // Math.pow(Math.E, (oldCost - newCost) / T)) is 1 when acceptance must be LOW (inverse) -> let's do
+    double acc = Math.pow(Math.E, (oldCost - newCost) / T);
+    if (acc >1) acc=1;
+    return acc;
+  }
+
   public Node findPartner(int nodeId, Integer[] nodes){
 
     Node nodep = entireGraph.get(nodeId);
 
     Node bestPartner = null;
+
+    // Task1
     double highestBenefit = 0;
 
+    double lowestCost = Math.pow(10, 10);
+
     for (Integer node:nodes) {
-      Node nodeq = entireGraph.get(node);
-      int dpp = getDegree(nodep, nodep.getColor());
-      int dqq = getDegree(nodeq, nodeq.getColor());
-      int oldValue = (int)(Math.pow(dpp, config.getAlpha()) + Math.pow(dqq,config.getAlpha()));
-      int dpq = getDegree(nodep, nodeq.getColor());
-      int dqp = getDegree(nodeq, nodep.getColor());
-      int newValue = (int)(Math.pow(dpq, config.getAlpha()) + Math.pow(dqp,config.getAlpha()));
-      if(newValue*this.T > oldValue && newValue > highestBenefit){
+        Node nodeq = entireGraph.get(node);
+
+        // Task 1
+/*
+        int dpp = getDegree(nodep, nodep.getColor());
+        int dqq = getDegree(nodeq, nodeq.getColor());
+
+        // dpp dqq
+        double oldValue = (Math.pow(dpp, config.getAlpha()) + Math.pow(dqq, config.getAlpha()));
+        int dpq = getDegree(nodep, nodeq.getColor());
+        int dqp = getDegree(nodeq, nodep.getColor());
+        // dpq dqp
+        double newValue = (Math.pow(dpq, config.getAlpha()) + Math.pow(dqp, config.getAlpha()));
+        // Task 1
+
+
+      if(newValue*this.T > newValue && newValue > highestBenefit){
         bestPartner = nodeq;
         highestBenefit = newValue;
       }
+    }
+*/
+
+        // TODO Task 2: introduce an acceptProbability calculated based on the old/new cost difference
+
+        // Oss: the cost is how much we "pay" and we want to minimize it. Here instead we have a "value" instead of the cost
+        // for this reason, we calculate a "Cost" as the number of degrees of a nodes - number of neighbors of its colours. (cost of maintaining old solution)
+
+        // Get the costs
+        int qDegreeDiff = getNeighbors(nodeq).length - getDegree(nodeq, nodeq.getColor());
+        int pDegreeDiff = getNeighbors(nodep).length - getDegree(nodep, nodep.getColor());
+
+        int qDegreePCol = getNeighbors(nodeq).length - getDegree(nodeq, nodep.getColor());
+        int pDegreeQCol = getNeighbors(nodep).length - getDegree(nodep, nodeq.getColor());
+
+        // the new alpha favorites the OldCost when higher than newCost. Alpha should hence be
+        double oldCost = (Math.pow(qDegreeDiff, config.getAlpha()) + Math.pow(pDegreeDiff, config.getAlpha()));
+        double newCost = (Math.pow(qDegreePCol, config.getAlpha()) + Math.pow(pDegreeQCol, config.getAlpha()));
+
+        Random random = new Random();
+
+        double acceptProbability = this.calculateAcceptanceProbability(oldCost, newCost);
+
+        double r = random.nextDouble();
+
+        if ((newCost < lowestCost) && (acceptProbability > r)) {
+            bestPartner = nodeq;
+            lowestCost = newCost;
+        }
+
     }
 
     return bestPartner;
