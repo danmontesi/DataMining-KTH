@@ -14,7 +14,12 @@ public class Config {
   private NodeSelectionPolicy nodeSelectionPolicy;
   private Float alpha;
   private Float talpha;
+  private String task;
 
+  public Config setTask(String task){
+    this.task = task;
+    return this;
+  }
 
   public Config setAlpha(Float alpha) {
     this.alpha = alpha;
@@ -80,6 +85,10 @@ public class Config {
   public Config setTAlpha(Float talpha){
     this.talpha = talpha;
     return this;
+  }
+
+  public String getTask(){
+    return task;
   }
 
 

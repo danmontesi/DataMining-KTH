@@ -16,11 +16,14 @@ import java.io.FileNotFoundException;
 public class CLI {
   final static Logger logger = Logger.getLogger(CLI.class);
 
+  @Option(name = "-task", usage = "Number of tasks.")
+  private static String TASK = "task1";
+
   @Option(name = "-help", usage = "Print usages.")
   private boolean HELP = false;
 
   @Option(name = "-rounds", usage = "Number of rounds.")
-  private int ROUNDS = 10000;
+  private int ROUNDS = 1000;
 
   @Option(name = "-numPartitions", usage = "Number of partitions.")
   private int NUM_PARTITIONS = 4;
@@ -58,7 +61,7 @@ public class CLI {
   private static String OUTPUT_DIR = "./output";
 
   @Option(name = "-talpha", usage = "Alpha for cooling down using the approach of Katrina Geltman")
-  private float TALPHA = (float) 0.95;
+  private float TALPHA = (float) 0.99;
 
   public Config parseArgs(String[] args) throws FileNotFoundException {
     CmdLineParser parser = new CmdLineParser(this);
@@ -114,6 +117,7 @@ public class CLI {
             .setGraphInitialColorPolicy(graphInitColorSelectionPolicy)
             .setOutputDir(OUTPUT_DIR)
             .setAlpha(ALPHA)
-            .setTAlpha(TALPHA);
+            .setTAlpha(TALPHA)
+            .setTask(TASK);
   }
 }

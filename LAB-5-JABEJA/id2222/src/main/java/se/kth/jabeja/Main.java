@@ -59,6 +59,10 @@ public class Main {
      */
     private void startJabeja(HashMap<Integer, Node> graph) throws IOException {
         Jabeja host = new Jabeja(graph, config);
+        if(config.getTask().equals("task2"))
+            host = new JabejaTask2(graph, config);
+        else if(config.getTask().equals("task2r"))
+            host = new JabejaTask2WithRestart(graph, config);
         host.startJabeja();
     }
 }

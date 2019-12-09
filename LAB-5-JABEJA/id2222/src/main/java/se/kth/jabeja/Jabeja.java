@@ -12,25 +12,24 @@ import java.util.*;
 
 public class Jabeja {
   final static Logger logger = Logger.getLogger(Jabeja.class);
-  private final Config config;
-  private final HashMap<Integer/*id*/, Node/*neighbors*/> entireGraph;
-  private final List<Integer> nodeIds;
-  private int numberOfSwaps;
-  private int round;
+  protected final Config config;
+  protected final HashMap<Integer/*id*/, Node/*neighbors*/> entireGraph;
+  protected final List<Integer> nodeIds;
+  protected int numberOfSwaps;
+  protected int round;
 
-  private float T;
-  private boolean resultFileCreated = false;
-  private int roundRestart = 100;
-  private int firsRestart = 200;
+  protected float T;
+  protected boolean resultFileCreated = false;
 
 
   //-------------------------------------------------------------------
-  public Jabeja(HashMap<Integer, Node> graph, Config config) {
+  public Jabeja (HashMap<Integer, Node> graph, Config config) {
     this.entireGraph = graph;
     this.nodeIds = new ArrayList(entireGraph.keySet());
     this.round = 0;
     this.numberOfSwaps = 0;
     this.config = config;
+    config.setTemperature(2.0f);
     this.T = config.getTemperature();
   }
 
@@ -41,13 +40,6 @@ public class Jabeja {
       for (int id : entireGraph.keySet()) {
         sampleAndSwap(id);
       }
-        //TODO TASK 2: restart; every roundRestart round add a restart. N defined by config
-        if (roundRestart>0 && round >= firsRestart) {
-            if (round % roundRestart == 0) {
-                this.T = config.getTemperature();
-                this.config.setDelta(this.config.getDelta()/this.config.getTAlpha());
-            }
-        }
       //one cycle for all nodes have completed.
       //reduce the temperature
       saCoolDown();
@@ -58,38 +50,11 @@ public class Jabeja {
   /**
    * Simulated analealing cooling function
    */
-  private void saCoolDown(){
-    // FIRST implementation (already present)
-/*
+  protected void saCoolDown(){
     if (this.T > 1)
       this.T -= config.getDelta();
     if (this.T < 1)
       this.T = 1;
-
-*/
-
-  // TODO Task 2: change tMin (very small) and Tstart (max 1)
-      float tMin = 0.0001f;
-    if (this.T > tMin) {
-        this.T = T - config.getDelta() - T*config.getDelta();;
-        if (this.T < tMin) System.out.println("\n\n\nReached Tmin\n\n\n");
-    }
-    if (this.T < tMin)
-          this.T = tMin;
-
-
-    //Third task completion: paper on http://katrinaeg.com/simulated-annealing.html
-      // Set Tmin and put T_new = T_old*talpha. with talpha <1 and close to 1.
-      // If T<Tmin -> set T to Tmin
-/*
-    float tMin = 0.00001f;
-    float alphaT = config.getTAlpha();
-
-    this.T = this.T*alphaT;
-    if (this.T <= tMin)
-      this.T = tMin;*/
-
-
   }
 
 
@@ -97,7 +62,7 @@ public class Jabeja {
    * Sample and swap algorithm at node p
    * @param nodeId
    */
-  private void sampleAndSwap(int nodeId) {
+  protected void sampleAndSwap(int nodeId) {
     Node partner = null;
     Node nodep = entireGraph.get(nodeId);
 
@@ -124,12 +89,6 @@ public class Jabeja {
 
   }
 
-  public double calculateAcceptanceProbability(double oldValue, double newValue){
-      // Math.pow(Math.E, (oldCost - newCost) / T)) is 1 when acceptance must be LOW (inverse) -> let's do
-    double acc = Math.pow(Math.E, (newValue - oldValue - 1) / T);
-    //System.out.println(acc);
-    return acc;
-  }
 
   public Node findPartner(int nodeId, Integer[] nodes){
 
@@ -144,8 +103,6 @@ public class Jabeja {
     for (Integer node:nodes) {
       Node nodeq = entireGraph.get(node);
 
-      // Task 1
-/*
         int dpp = getDegree(nodep, nodep.getColor());
         int dqq = getDegree(nodeq, nodeq.getColor());
 
@@ -163,28 +120,6 @@ public class Jabeja {
         highestBenefit = newValue;
       }
     }
-*/
-      int dpp = getDegree(nodep, nodep.getColor());
-      int dqq = getDegree(nodeq, nodeq.getColor());
-
-      // dpp dqq
-      double oldValue = (Math.pow(dpp, config.getAlpha()) + Math.pow(dqq, config.getAlpha()));
-      int dpq = getDegree(nodep, nodeq.getColor());
-      int dqp = getDegree(nodeq, nodep.getColor());
-      // dpq dqp
-      double newValue = (Math.pow(dpq, config.getAlpha()) + Math.pow(dqp, config.getAlpha()));
-      // Task 1
-
-      Random random = new Random();
-      double acceptProbability = this.calculateAcceptanceProbability(oldValue, newValue);
-
-      if (acceptProbability >= random.nextDouble() && newValue > highestBenefit) {
-        bestPartner = nodeq;
-        highestBenefit = newValue;
-      }
-    }
-
-
     return bestPartner;
   }
 
@@ -194,7 +129,7 @@ public class Jabeja {
    * @param colorId
    * @return how many neighbors of the node have color == colorId
    */
-  private int getDegree(Node node, int colorId){
+  protected int getDegree(Node node, int colorId){
     int degree = 0;
     for(int neighborId : node.getNeighbours()){
       Node neighbor = entireGraph.get(neighborId);
@@ -210,7 +145,7 @@ public class Jabeja {
    * @param currentNodeId
    * @return Returns a uniformly random sample of the graph
    */
-  private Integer[] getSample(int currentNodeId) {
+  protected Integer[] getSample(int currentNodeId) {
     int count = config.getUniformRandomSampleSize();
     int rndId;
     int size = entireGraph.size();
@@ -238,7 +173,7 @@ public class Jabeja {
    * @param node
    * @return
    */
-  private Integer[] getNeighbors(Node node) {
+  protected Integer[] getNeighbors(Node node) {
     ArrayList<Integer> list = node.getNeighbours();
     int count = config.getRandomNeighborSampleSize();
     int rndId;
@@ -272,7 +207,7 @@ public class Jabeja {
    *
    * @throws IOException
    */
-  private void report() throws IOException {
+  protected void report() throws IOException {
     int grayLinks = 0;
     int migrations = 0; // number of nodes that have changed the initial color
     int size = entireGraph.size();
@@ -307,7 +242,7 @@ public class Jabeja {
     saveToFile(edgeCut, migrations);
   }
 
-  private void saveToFile(int edgeCuts, int migrations) throws IOException {
+  protected void saveToFile(int edgeCuts, int migrations) throws IOException {
     String delimiter = "\t\t";
     String outputFilePath;
 
