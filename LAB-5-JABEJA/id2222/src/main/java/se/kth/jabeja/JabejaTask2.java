@@ -55,7 +55,7 @@ public class JabejaTask2 extends Jabeja{
 
 
   public double calculateAcceptanceProbability(double oldValue, double newValue){
-    double acc = Math.pow(Math.E, (newValue - oldValue - 1) / T);
+    double acc = Math.pow(Math.E, (newValue - oldValue - 1) / T);    //Version not modified: Math.pow(Math.E, (newValue - oldValue) / T)
     return acc;
   }
 

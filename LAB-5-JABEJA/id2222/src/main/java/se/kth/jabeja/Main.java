@@ -63,6 +63,8 @@ public class Main {
             host = new JabejaTask2(graph, config);
         else if(config.getTask().equals("task2r"))
             host = new JabejaTask2WithRestart(graph, config);
+        else if(config.getTask().equals("task3"))
+            host = new JabejaTask2WithRestart(graph, config);
         host.startJabeja();
     }
 }

@@ -115,7 +115,7 @@ public class Jabeja {
         // Task 1
 
 
-      if(newValue*this.T > newValue && newValue > highestBenefit){
+      if(newValue*this.T > oldValue && newValue > highestBenefit){
         bestPartner = nodeq;
         highestBenefit = newValue;
       }
