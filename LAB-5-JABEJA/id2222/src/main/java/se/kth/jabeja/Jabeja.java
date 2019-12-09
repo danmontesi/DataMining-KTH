@@ -20,7 +20,8 @@ public class Jabeja {
 
   private float T;
   private boolean resultFileCreated = false;
-  private int roundRestart = 400;
+  private int roundRestart = 100;
+  private int firsRestart = 200;
 
 
   //-------------------------------------------------------------------
@@ -41,9 +42,10 @@ public class Jabeja {
         sampleAndSwap(id);
       }
         //TODO TASK 2: restart; every roundRestart round add a restart. N defined by config
-        if (roundRestart>0) {
+        if (roundRestart>0 && round >= firsRestart) {
             if (round % roundRestart == 0) {
                 this.T = config.getTemperature();
+                this.config.setDelta(this.config.getDelta()/this.config.getTAlpha());
             }
         }
       //one cycle for all nodes have completed.
@@ -67,7 +69,7 @@ public class Jabeja {
 */
 
   // TODO Task 2: change tMin (very small) and Tstart (max 1)
-      float tMin = 0.001f;
+      float tMin = 0.0001f;
     if (this.T > tMin) {
         this.T = T - config.getDelta() - T*config.getDelta();;
         if (this.T < tMin) System.out.println("\n\n\nReached Tmin\n\n\n");
@@ -75,18 +77,18 @@ public class Jabeja {
     if (this.T < tMin)
           this.T = tMin;
 
-/*
+
     //Third task completion: paper on http://katrinaeg.com/simulated-annealing.html
       // Set Tmin and put T_new = T_old*talpha. with talpha <1 and close to 1.
       // If T<Tmin -> set T to Tmin
-
+/*
     float tMin = 0.00001f;
     float alphaT = config.getTAlpha();
 
     this.T = this.T*alphaT;
     if (this.T <= tMin)
-      this.T = tMin;
-*/
+      this.T = tMin;*/
+
 
   }
 
@@ -122,10 +124,10 @@ public class Jabeja {
 
   }
 
-  public double calculateAcceptanceProbability(double oldCost, double newCost){
+  public double calculateAcceptanceProbability(double oldValue, double newValue){
       // Math.pow(Math.E, (oldCost - newCost) / T)) is 1 when acceptance must be LOW (inverse) -> let's do
-    double acc = Math.pow(Math.E, (oldCost - newCost) / T);
-    if (acc >1) acc=1;
+    double acc = Math.pow(Math.E, (newValue - oldValue - 1) / T);
+    //System.out.println(acc);
     return acc;
   }
 
@@ -138,12 +140,11 @@ public class Jabeja {
     // Task1
     double highestBenefit = 0;
 
-    double lowestCost = Math.pow(10, 10);
 
     for (Integer node:nodes) {
-        Node nodeq = entireGraph.get(node);
+      Node nodeq = entireGraph.get(node);
 
-        // Task 1
+      // Task 1
 /*
         int dpp = getDegree(nodep, nodep.getColor());
         int dqq = getDegree(nodeq, nodeq.getColor());
@@ -163,35 +164,26 @@ public class Jabeja {
       }
     }
 */
+      int dpp = getDegree(nodep, nodep.getColor());
+      int dqq = getDegree(nodeq, nodeq.getColor());
 
-        // TODO Task 2: introduce an acceptProbability calculated based on the old/new cost difference
+      // dpp dqq
+      double oldValue = (Math.pow(dpp, config.getAlpha()) + Math.pow(dqq, config.getAlpha()));
+      int dpq = getDegree(nodep, nodeq.getColor());
+      int dqp = getDegree(nodeq, nodep.getColor());
+      // dpq dqp
+      double newValue = (Math.pow(dpq, config.getAlpha()) + Math.pow(dqp, config.getAlpha()));
+      // Task 1
 
-        // Oss: the cost is how much we "pay" and we want to minimize it. Here instead we have a "value" instead of the cost
-        // for this reason, we calculate a "Cost" as the number of degrees of a nodes - number of neighbors of its colours. (cost of maintaining old solution)
+      Random random = new Random();
+      double acceptProbability = this.calculateAcceptanceProbability(oldValue, newValue);
 
-        // Get the costs
-        int qDegreeDiff = getNeighbors(nodeq).length - getDegree(nodeq, nodeq.getColor());
-        int pDegreeDiff = getNeighbors(nodep).length - getDegree(nodep, nodep.getColor());
-
-        int qDegreePCol = getNeighbors(nodeq).length - getDegree(nodeq, nodep.getColor());
-        int pDegreeQCol = getNeighbors(nodep).length - getDegree(nodep, nodeq.getColor());
-
-        // the new alpha favorites the OldCost when higher than newCost. Alpha should hence be
-        double oldCost = (Math.pow(qDegreeDiff, config.getAlpha()) + Math.pow(pDegreeDiff, config.getAlpha()));
-        double newCost = (Math.pow(qDegreePCol, config.getAlpha()) + Math.pow(pDegreeQCol, config.getAlpha()));
-
-        Random random = new Random();
-
-        double acceptProbability = this.calculateAcceptanceProbability(oldCost, newCost);
-
-        double r = random.nextDouble();
-
-        if ((newCost < lowestCost) && (acceptProbability > r)) {
-            bestPartner = nodeq;
-            lowestCost = newCost;
-        }
-
+      if (acceptProbability >= random.nextDouble() && newValue > highestBenefit) {
+        bestPartner = nodeq;
+        highestBenefit = newValue;
+      }
     }
+
 
     return bestPartner;
   }
