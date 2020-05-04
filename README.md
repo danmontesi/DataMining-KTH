@@ -14,11 +14,11 @@ Repository of all the deliverables developed for the course in KTH: ID2222 in Da
 The course deliverables are 5 labs implementing some Data Mining techniques to deal with large datasets. They are developed using Python or pyspark.
 
 **Labs**
-* `lab1`: LSH Document Similarity implementation using 10 scientific papers sample corpus
-* `lab2`: AssociationRules algorithm implementation including Apriori algorithm
-* `lab3`: HyperBall technique for approximated node centrality calculation implementation. From paper [HyperBall](http://vigna.di.unimi.it/ftp/papers/HyperBall.pdf)
-* `lab4`: Graph Spectral Clustering technique implementation
-* `lab5`: JABEJA (swap) algorithm for minimization of ratio cut in partitioning large graphs into equal dimensionality clusters
+* `Lab1 - LSH`: LSH Document Similarity implementation using 10 scientific papers sample corpus
+* `Lab1 - MinHashing & AssociationRules`: AssociationRules algorithm implementation including Apriori algorithm
+* `Lab3 - HyperBall`: HyperBall technique for approximated node centrality calculation implementation. From paper [HyperBall](http://vigna.di.unimi.it/ftp/papers/HyperBall.pdf)
+* `Lab4 - GraphSpectra`: Graph Spectral Clustering technique implementation
+* `Lab5 - JABEJA`: JABEJA (swap) algorithm for minimization of ratio cut in partitioning large graphs into similar dimensionality clusters
 
 ## Team members
 * **[Daniele Montesi](https://github.com/danmontesi)**
